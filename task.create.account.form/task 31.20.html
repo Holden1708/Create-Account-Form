@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Taks 31.10 Create Account</title>
+    <style>
+        .div-background-picture {
+            background-image: url("images/signup-bg.jpg");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0.8
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid div-background-picture">
+        <form id="form-create-account">
+            <div class="row d-flex align-items-center min-vh-100 ">
+                <div class="col-sm-3 text-center mx-auto my-0 jumbotron bg-white">
+                    <div class="mb-5">
+                        <h3 class="text-center">CREATE ACCOUNT</h3>
+                    </div>
+            
+                    <div>
+                        <div class="form-group">
+                            <input type="text" name="yourname" placeholder="Your Name" id="inp-yourname"
+                                class="form-control" value="" autocomplete="yourname">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="youremail" placeholder="Your Email" id="inp-email"
+                                class="form-control" value="" autocomplete="youremail">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="yourpassword" id="pwd-password" placeholder="Password" 
+                             class="form-control" value="" autocomplete="inp-current-password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="yourrepeatpassword" id="pwd-prepeat-password" placeholder="Repeat your password" 
+                             class="form-control" value="" autocomplete="inp-current-repeat-password">
+                        </div>
+                        <div class="form-group text-center ml-3">
+                                <input type="checkbox" name="agreeallstatements" id="ckb-agree-statements" class="form-check-input border border-dark ">
+                                <label class="text-center"> I agree all statements in </label> <a href="#"> Terms of service</a>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-log btn-block btn-success" id="btn-sign-up">SIGN UP</button>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <div> Have already an account ? <a href="#"> Login here</a></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+    </div>
+   
+</body>
+<script>
+    "use strict";
+    /*** REGION 1 - Vùng khai báo biến toàn cục */
+    
+    /*** REGION 2 - Vùng gán / thực thi sự kiện cho các elements */
+        $("#btn-sign-up").on("click", function(e){
+            e.preventDefault(); // hàm ngăn chặn sự kiện mặc định
+            onBtnSignUpClick();
+        });
+    /*** REGION 3 - Event handlers - Vùng khai báo các hàm xử lý sự kiện */
+        // hàm sự kiện nhấn nút sign up
+        function onBtnSignUpClick(){
+            "use strict";
+            // bước 0: tạo đối tượng chứa dữ liệu từ form
+            var vUserObject = {
+                name: "",
+                email: "",
+                password: "",
+                repeatPassword: "",
+                agreeStatments: false
+            };
+            // bước 1: thu thập dữ liệu
+            getDataFromForm(vUserObject);
+            // bước 2: kiểm tra dữ liệu
+            var vCheck = validateData(vUserObject);
+            // bước 3: hiển thị dữ liệu
+            if (vCheck == true){
+                displayData(vUserObject);
+            }
+        }
+    /*** REGION 4 - Common funtions - Vùng khai báo hàm dùng chung trong toàn bộ chương trình*/
+        // hàm thu thập dữ liệu
+        function getDataFromForm(paramUser){
+            "use strict";
+            var vInputUserName = $("#inp-yourname").val();
+            var vInputUserEmail = $("#inp-email").val();
+            var vInputPassword = $("#pwd-password").val();
+            var vInputRepeatPassword = $("#pwd-prepeat-password").val();
+
+            if($("#ckb-agree-statements").is(":checked") == true){
+                var vAgree = true;
+            }
+            else {
+                var vAgree = false;
+            }
+
+            paramUser.name= vInputUserName;
+            paramUser.email = vInputUserEmail
+            paramUser.password = vInputPassword;
+            paramUser.repeatPassword = vInputRepeatPassword;
+            paramUser.agreeStatments = vAgree;
+        }
+        
+        // hàm kiểm tra dữ liệu
+        function validateData(paramUser){
+            "use strict";
+            var vUsername = paramUser.name;
+            var vUserEmail = paramUser.email;
+            var vPassword = paramUser.password;
+            var vRepeatPassword = paramUser.repeatPassword;
+            var vAgreeStatements = paramUser.agreeStatments;
+
+            if (vUsername == ""){
+                alert("Your Name is empty!");
+                return false;
+            }
+
+            if (vUserEmail == ""){
+                alert("Email is empty!");
+                return false;
+            }
+
+            if(validateEmail(vUserEmail) == false){
+                alert("Email input is invalid!");
+                return false;
+            }
+
+            if (vPassword.length < 8){
+                alert("Password must have at least 8 characters!");
+                return false;
+            }
+
+            if (vPassword !== vRepeatPassword){
+                alert("Password and confirm password does not match!");
+                return false;
+            }
+
+            if (vAgreeStatements == false){
+                alert("You have to agree all statments in Terms of service!");
+                return false;
+            }
+
+            // validate form với htmls
+            if($("#form-create-account")[0].checkValidity()== true){
+                console.log("Form hợp lệ");
+            }
+            else {
+                $("#form-create-account")[0].reportValidity();
+            }
+
+            return true;
+        }
+
+        // Hàm kiểm tra định dạng email
+        function validateEmail(paramEmail) {
+            var vValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (paramEmail.match(vValidRegex)) {
+                return true;
+                } else {
+                return false;
+                }
+        }
+
+        // hàm hiển thị dữ liệu
+        function displayData(paramUser){
+            "use strict";
+            console.log(paramUser);
+        }
+  </script> 
+</html>
